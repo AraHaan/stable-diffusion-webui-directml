@@ -32,7 +32,10 @@ def setup_for_low_vram(sd_model, use_medvram):
         if module_in_gpu is not None:
             module_in_gpu.to(cpu)
 
-        module.to(devices.device)
+        try:
+            module.to(devices.device)
+        except RuntimeError:
+            module.to(devices.get_optimal_device())
         module_in_gpu = module
 
     # see below for register_forward_pre_hook;
